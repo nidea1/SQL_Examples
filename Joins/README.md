@@ -12,4 +12,5 @@ A JOIN used to combine rows from two or more tables, based on a related column b
 - **SELF JOIN:** A self join is a unique type of join where a table is joined with itself.
 - **CROSS JOIN:** A cross join, also known as a Cartesian join, returns the Cartesian product of the two tables, meaning each row from the first table is combined with each row from the second table.
 <br />
+
 ![img1](https://miro.medium.com/v2/resize:fit:1400/0*rFMChX4SAmQ9RzF9.png)
