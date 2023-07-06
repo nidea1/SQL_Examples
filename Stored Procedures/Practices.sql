@@ -40,3 +40,44 @@ END;
 
 EXEC SellingProductsByName
 @ProductName = 'Alice Mutton'
+
+
+-- Insert Order with error handling
+
+CREATE PROCEDURE InsertOrder
+  @CustomerID nchar(5),
+  @EmployeeID int,
+  @OrderDate datetime,
+  @ShipName nvarchar(40),
+  @ShipAddress nvarchar(60),
+  @ShipCity nvarchar(15)
+AS
+BEGIN
+  BEGIN TRY
+    DECLARE @InsertedOrders TABLE (
+      OrderID int,
+      CustomerID nchar(5),
+      EmployeeID int,
+      OrderDate datetime,
+      ShipName nvarchar(40),
+      ShipAddress nvarchar(60),
+      ShipCity nvarchar(15)
+    );
+
+    INSERT INTO Orders(CustomerID, EmployeeID, OrderDate, ShipName, ShipAddress, ShipCity)
+    OUTPUT INSERTED.OrderID, INSERTED.CustomerID, INSERTED.EmployeeID, INSERTED.OrderDate, INSERTED.ShipName, INSERTED.ShipAddress, INSERTED.ShipCity
+    INTO @InsertedOrders
+    VALUES (@CustomerID, @EmployeeID, @OrderDate, @ShipName, @ShipAddress, @ShipCity)
+
+    SELECT * FROM @InsertedOrders;
+  END TRY
+  BEGIN CATCH
+    SELECT 
+        ERROR_NUMBER() AS ErrorNumber,
+        ERROR_STATE() AS ErrorState,
+        ERROR_SEVERITY() AS ErrorSeverity,
+        ERROR_PROCEDURE() AS ErrorProcedure,
+        ERROR_LINE() AS ErrorLine,
+        ERROR_MESSAGE() AS ErrorMessage;
+  END CATCH;
+END;
